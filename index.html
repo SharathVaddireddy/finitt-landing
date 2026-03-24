@@ -250,135 +250,202 @@ select.form-input option { background: var(--black2); color: var(--white); }
   margin-bottom: 60px; letter-spacing: -0.5px;
 }
 
-/* ═══ HOW IT WORKS — infographic ═══ */
+/* ═══ HOW IT WORKS — ANIMATED ═══ */
+.how-section {
+  position: relative; overflow: hidden;
+  padding: 96px 56px; background: #0e1012;
+}
+.how-grid-bg {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(213,253,81,0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(213,253,81,0.03) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+.how-glow {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(213,253,81,0.05) 0%, transparent 70%);
+}
+.how-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
 .how-subtitle {
-  font-family: var(--font-head); font-size: clamp(14px, 2vw, 18px);
+  font-family: var(--font-head); font-size: clamp(13px, 2vw, 18px);
   font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
-  color: var(--lime); text-align: center; margin-bottom: 48px; opacity: 0.8;
+  color: var(--lime); text-align: center; margin-bottom: 48px; opacity: 0.7;
 }
-.how-panels {
+
+/* Cards wrapper */
+.how-cards-wrap {
   display: grid; grid-template-columns: 1fr auto 1fr;
-  gap: 20px; align-items: stretch; margin-bottom: 56px;
+  gap: 0; align-items: stretch; margin-bottom: 48px;
+  position: relative;
 }
-.how-panel {
-  background: var(--black2); border-radius: 20px;
-  border: 1px solid rgba(213,253,81,0.1);
-  padding: 28px 24px;
-  display: flex; flex-direction: column;
+
+/* Cards */
+.hw-card {
+  background: #1a1d1f; border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 28px 24px; position: relative;
+  transition: border-color 0.4s, box-shadow 0.4s;
 }
-.how-panel.center-panel {
+.hw-card.active {
+  border-color: rgba(213,253,81,0.25);
+  box-shadow: 0 0 30px rgba(213,253,81,0.06);
+}
+.hw-card-center {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 28px 32px; min-width: 180px;
+  min-width: 160px; margin: 0 20px;
 }
-.panel-label {
-  font-family: var(--font-head); font-size: 11px; font-weight: 700;
-  letter-spacing: 2px; text-transform: uppercase; color: var(--lime);
-  margin-bottom: 16px; opacity: 0.7;
+.hw-eyebrow {
+  font-family: var(--font-head); font-size: 10px; font-weight: 600;
+  letter-spacing: 2.5px; text-transform: uppercase; color: #4b5563;
+  margin-bottom: 16px;
 }
-.panel-txn-head {
-  display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
-}
-.txn-icon {
-  width: 40px; height: 40px; border-radius: 10px;
-  background: rgba(246,200,106,0.1);
+
+/* Spend card */
+.hw-merchant { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.hw-merchant-icon {
+  width: 38px; height: 38px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
 }
-.txn-title { font-size: 15px; font-weight: 500; color: var(--white); }
-.txn-sub { font-size: 11px; color: var(--gray); }
-.panel-amount {
-  font-family: var(--font-head); font-size: 56px; font-weight: 800;
-  color: var(--white); margin-bottom: 16px; line-height: 1;
+.hw-merchant-name { font-size: 15px; font-weight: 500; color: var(--white); }
+.hw-merchant-cat { font-size: 11px; color: var(--gray); }
+.hw-amount {
+  font-family: var(--font-head); font-size: 44px; font-weight: 800;
+  color: var(--white); line-height: 1; margin-bottom: 14px;
+  transition: opacity 0.3s;
 }
-.rupee-sm { font-size: 0.5em; opacity: 0.5; font-weight: 600; }
-.panel-voice-tag {
+.hw-payment { margin-bottom: 14px; min-height: 32px; }
+.hw-pill {
   display: inline-flex; align-items: center; gap: 6px;
+  border-radius: 8px; padding: 6px 12px;
+  font-size: 11px; font-weight: 600;
+}
+.hw-pill-upi { background: rgba(90,197,58,0.12); color: var(--green); }
+.hw-pill-upi::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--green); }
+.hw-pill-debit { background: rgba(96,165,250,0.12); color: #60a5fa; }
+.hw-pill-debit::before { content:''; width:6px; height:6px; border-radius:50%; background:#60a5fa; }
+.hw-pill-cash {
   background: rgba(235,93,42,0.12); border: 1px solid rgba(235,93,42,0.25);
-  border-radius: 8px; padding: 8px 12px;
-  font-size: 11px; font-weight: 600; color: var(--orange);
-  margin-bottom: 16px; align-self: flex-start;
+  color: var(--orange);
 }
-.panel-txn-row {
-  background: var(--black3); border-radius: 12px; padding: 12px 14px;
+.hw-txn-rows { opacity: 0; transform: translateY(8px); transition: opacity 0.4s, transform 0.4s; }
+.hw-txn-rows.show { opacity: 1; transform: translateY(0); }
+.hw-txn-row {
+  background: var(--black3); border-radius: 10px; padding: 10px 12px;
   display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
-.txn-row-title { font-size: 13px; font-weight: 500; color: var(--white); }
-.txn-row-sub { font-size: 10px; color: var(--gray); margin-top: 2px; }
-.txn-row-amt { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: var(--white); }
-.txn-row-amt.lime { color: var(--lime); }
+.hw-txn-name { font-size: 12px; font-weight: 500; color: var(--white); }
+.hw-txn-method { font-size: 10px; color: var(--gray); margin-top: 1px; }
+.hw-txn-amt { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--white); }
+.hw-txn-amt.lime { color: var(--lime); }
 
-/* Center roundup circle */
-.roundup-circle {
-  width: 120px; height: 120px; border-radius: 50%;
-  border: 2px solid rgba(213,253,81,0.25);
-  background: rgba(213,253,81,0.06);
+/* Center roundup */
+.hw-circle {
+  width: 90px; height: 90px; border-radius: 50%;
+  border: 2px solid rgba(213,253,81,0.2);
+  background: rgba(213,253,81,0.04);
   display: flex; align-items: center; justify-content: center;
-  gap: 2px; margin: 16px auto;
+  gap: 2px; margin: 8px auto 12px;
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
 }
-.roundup-num {
-  font-family: var(--font-head); font-size: 48px; font-weight: 800; color: var(--lime);
+.hw-circle.glow {
+  border-color: rgba(213,253,81,0.5);
+  box-shadow: 0 0 24px rgba(213,253,81,0.15);
+  background: rgba(213,253,81,0.08);
 }
-.roundup-calc {
-  font-size: 14px; color: var(--gray); text-align: center; margin-top: 16px;
-}
-.roundup-calc strong { color: var(--white); font-weight: 600; }
-.roundup-label {
-  font-family: var(--font-head); font-size: 14px; font-weight: 700;
-  letter-spacing: 2px; text-transform: uppercase; color: var(--lime);
-  text-align: center; margin-top: 8px;
+.hw-circle-rupee { font-size: 14px; color: var(--lime); opacity: 0.5; font-weight: 600; }
+.hw-circle-num { font-family: var(--font-head); font-size: 32px; font-weight: 800; color: var(--lime); }
+.hw-calc { font-size: 13px; color: var(--gray); text-align: center; }
+.hw-calc strong { color: var(--white); font-weight: 600; }
+.hw-spare {
+  font-family: var(--font-head); font-size: 12px; font-weight: 700;
+  letter-spacing: 2px; color: var(--lime); text-align: center; margin-top: 6px;
 }
 
-/* Portfolio panel */
-.portfolio-value {
-  font-family: var(--font-head); font-size: 42px; font-weight: 800;
-  color: var(--lime); margin-bottom: 4px; line-height: 1;
+/* Portfolio card */
+.hw-port-val {
+  font-family: var(--font-head); font-size: 44px; font-weight: 800;
+  color: var(--lime); line-height: 1; margin-bottom: 4px;
 }
-.portfolio-returns {
-  font-size: 13px; color: var(--gray); margin-bottom: 20px;
+.hw-port-ret { font-size: 13px; color: var(--gray); margin-bottom: 18px; }
+.hw-port-ret .lime { color: var(--lime); font-weight: 600; }
+.hw-live {
+  font-size: 9px; font-weight: 700; letter-spacing: 1px;
+  background: rgba(213,253,81,0.12); color: var(--lime);
+  padding: 3px 8px; border-radius: 5px;
 }
-.portfolio-returns .lime { color: var(--lime); font-weight: 600; }
-.live-pill {
-  font-size: 10px; font-weight: 700; letter-spacing: 1px;
-  background: rgba(213,253,81,0.15); color: var(--lime);
-  padding: 3px 10px; border-radius: 6px;
-}
-.portfolio-goal {
-  background: var(--black3); border-radius: 12px; padding: 14px;
-  margin-bottom: 12px;
-}
-.goal-name { font-size: 13px; color: var(--white); }
-.goal-pct { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: var(--white); }
-.goal-bar { height: 5px; background: rgba(255,255,255,0.06); border-radius: 3px; }
-.goal-bar-fill { height: 5px; border-radius: 3px; background: var(--lime); }
-.portfolio-invested {
+.hw-goal { background: var(--black3); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+.hw-goal-name { font-size: 12px; color: var(--white); }
+.hw-goal-pct { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--white); }
+.hw-goal-bar { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; }
+.hw-goal-fill { height: 4px; border-radius: 2px; background: var(--lime); transition: width 0.6s ease; }
+.hw-toast {
   display: flex; align-items: center; gap: 8px;
-  background: var(--black3); border-radius: 10px; padding: 10px 14px;
+  background: var(--black3); border-radius: 10px; padding: 10px 12px;
   font-size: 12px; color: var(--gray); font-weight: 500;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 0.4s, transform 0.4s;
 }
-.invested-dot {
+.hw-toast.show { opacity: 1; transform: translateY(0); }
+.hw-toast-dot {
   width: 8px; height: 8px; border-radius: 50%; background: var(--lime); flex-shrink: 0;
+  animation: pulse 1.5s ease infinite;
 }
 
-/* Step indicators */
-.how-steps {
+/* Connectors */
+.connector {
+  position: absolute; top: 50%; height: 1.5px;
+  background: rgba(255,255,255,0.04); overflow: hidden; z-index: 2;
+}
+.connector-left { left: calc(33.33% - 10px); width: 40px; transform: translateY(-50%); }
+.connector-right { right: calc(33.33% - 10px); width: 40px; transform: translateY(-50%); }
+.connector-shimmer {
+  position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, var(--lime), transparent);
+  opacity: 0;
+}
+.connector-shimmer.animate {
+  animation: shimmerFlow 0.8s ease forwards;
+}
+@keyframes shimmerFlow { 0%{left:-100%;opacity:1} 100%{left:100%;opacity:1} }
+
+/* Coin particles */
+.coin-container { position: absolute; inset: 0; pointer-events: none; z-index: 5; overflow: hidden; }
+.coin {
+  position: absolute;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--lime);
   display: flex; align-items: center; justify-content: center;
-  gap: 0; flex-wrap: wrap;
+  font-size: 10px; font-weight: 700; color: var(--black);
+  box-shadow: 0 0 16px rgba(213,253,81,0.7);
+  opacity: 0;
 }
-.how-step-item {
-  display: flex; align-items: center; gap: 8px;
+
+/* Steps */
+.hw-steps {
+  display: flex; align-items: center; justify-content: center; gap: 0;
+}
+.hw-step {
+  display: flex; align-items: center; gap: 8px; padding: 0 12px;
   font-size: 13px; color: var(--gray); font-weight: 400;
-  padding: 0 12px;
+  opacity: 0.35; transition: opacity 0.4s, color 0.4s;
 }
-.step-circle {
+.hw-step.active { opacity: 1; color: var(--white); }
+.hw-step.active .hw-step-num { border-color: var(--lime); color: var(--lime); background: rgba(213,253,81,0.08); }
+.hw-step-num {
   width: 28px; height: 28px; border-radius: 50%;
-  border: 1.5px solid var(--lime); color: var(--lime);
+  border: 1.5px solid rgba(255,255,255,0.15); color: var(--gray);
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-head); font-size: 13px; font-weight: 700;
-  flex-shrink: 0;
+  flex-shrink: 0; transition: border-color 0.4s, color 0.4s, background 0.4s;
 }
-.step-line {
-  width: 32px; height: 1.5px; background: rgba(213,253,81,0.2); flex-shrink: 0;
+.hw-step-line {
+  width: 28px; height: 1.5px; background: rgba(255,255,255,0.08); flex-shrink: 0;
+  transition: background 0.4s;
 }
+.hw-step-line.active { background: rgba(213,253,81,0.3); }
 
 /* ═══ FEATURES — edge-to-edge grid ═══ */
 .features-grid {
@@ -469,14 +536,15 @@ footer {
 @media(max-width:900px) {
   nav { padding: 14px 20px; }
   .section { padding: 72px 20px; }
-  .how-panels { grid-template-columns: 1fr; gap: 16px; }
-  .how-panel.center-panel { min-width: unset; padding: 24px; }
-  .panel-amount { font-size: 42px; }
-  .how-steps { gap: 4px; }
-  .step-line { width: 16px; }
-  .how-step-item { padding: 0 6px; font-size: 11px; }
-  .how-step-item span { display: none; }
-  .how-subtitle { font-size: 12px; letter-spacing: 2px; }
+  .how-section { padding: 72px 20px; }
+  .how-cards-wrap { grid-template-columns: 1fr; gap: 16px; }
+  .hw-card-center { min-width: unset; margin: 0; }
+  .connector { display: none; }
+  .hw-amount, .hw-port-val { font-size: 36px; }
+  .hw-steps { gap: 4px; }
+  .hw-step { padding: 0 6px; font-size: 11px; }
+  .hw-step span { display: none; }
+  .hw-step-line { width: 16px; }
   .features-grid { grid-template-columns: 1fr; }
   .feat:nth-child(1) { border-radius: 16px 16px 0 0; }
   .feat:nth-child(3), .feat:nth-child(4) { border-radius: 0; }
@@ -593,101 +661,85 @@ footer {
   </div>
 </div>
 
-<!-- ═══ HOW IT WORKS ═══ -->
-<section class="section" id="how">
-  <div class="section-inner">
-    <div class="section-tag reveal">How FINITT Works</div>
+<!-- ═══ HOW IT WORKS — ANIMATED ═══ -->
+<section class="how-section" id="how">
+  <div class="how-grid-bg"></div>
+  <div class="how-glow"></div>
+  <div class="how-inner">
+    <div class="section-tag reveal" style="text-align:center">How FINITT Works</div>
     <h2 class="how-subtitle reveal">UPI &middot; DEBIT CARD &middot; CASH &mdash; EVERY RUPEE ROUNDED UP</h2>
 
-    <!-- 3-panel infographic -->
-    <div class="how-panels reveal">
-      <!-- Panel 1: You Spend -->
-      <div class="how-panel">
-        <div class="panel-label">YOU SPEND</div>
-        <div class="panel-txn-head">
-          <div class="txn-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="2" stroke="#F6C86A" stroke-width="1.5"/><path d="M3 10h18" stroke="#F6C86A" stroke-width="1.5"/><circle cx="7" cy="15" r="1.5" fill="#F6C86A"/></svg>
-          </div>
+    <div class="how-cards-wrap reveal">
+      <!-- Connector lines -->
+      <div class="connector connector-left"><div class="connector-shimmer"></div></div>
+      <div class="connector connector-right"><div class="connector-shimmer"></div></div>
+      <!-- Coin container -->
+      <div class="coin-container" id="coinContainer"></div>
+
+      <!-- Card 1: You Spend -->
+      <div class="hw-card" id="hwSpend">
+        <div class="hw-eyebrow">YOU SPEND</div>
+        <div class="hw-merchant" id="hwMerchant">
+          <div class="hw-merchant-icon" id="hwMerchantIcon"></div>
           <div>
-            <div class="txn-title">Bus ticket</div>
-            <div class="txn-sub">Cash payment</div>
+            <div class="hw-merchant-name" id="hwMerchantName">Swiggy</div>
+            <div class="hw-merchant-cat" id="hwMerchantCat">Food delivery</div>
           </div>
         </div>
-        <div class="panel-amount"><span class="rupee-sm">&#x20B9;</span> 15</div>
-        <div class="panel-voice-tag">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" stroke="#EB5D2A" stroke-width="1.5"/></svg>
-          Voice logged &middot; &#x20B9;15 spent
-        </div>
-        <div class="panel-txn-row">
-          <div>
-            <div class="txn-row-title">Bus ticket</div>
-            <div class="txn-row-sub">Cash &middot; Voice logged via WhatsApp</div>
+        <div class="hw-amount" id="hwAmount">&#x20B9;73</div>
+        <div class="hw-payment" id="hwPayment"></div>
+        <div class="hw-txn-rows" id="hwTxnRows">
+          <div class="hw-txn-row">
+            <div><div class="hw-txn-name" id="hwTxnName">Swiggy</div><div class="hw-txn-method" id="hwTxnMethod">UPI &middot; GPay</div></div>
+            <div class="hw-txn-amt" id="hwTxnAmt">&#x20B9;73</div>
           </div>
-          <div class="txn-row-amt">&#x20B9;15</div>
-        </div>
-        <div class="panel-txn-row">
-          <div>
-            <div class="txn-row-title">Round-up</div>
-            <div class="txn-row-sub">Auto-invested by FINITT</div>
+          <div class="hw-txn-row">
+            <div><div class="hw-txn-name">Round-up</div><div class="hw-txn-method">Auto-invested by FINITT</div></div>
+            <div class="hw-txn-amt lime" id="hwRoundupAmt">+&#x20B9;7</div>
           </div>
-          <div class="txn-row-amt lime">+&#x20B9;5</div>
         </div>
       </div>
 
-      <!-- Panel 2: Round-Up (center) -->
-      <div class="how-panel center-panel">
-        <div class="panel-label" style="text-align:center">ROUND-UP</div>
-        <div class="roundup-circle">
-          <span class="rupee-sm">&#x20B9;</span>
-          <span class="roundup-num">5</span>
+      <!-- Card 2: Round-Up -->
+      <div class="hw-card hw-card-center" id="hwRoundup">
+        <div class="hw-eyebrow" style="text-align:center">ROUND-UP</div>
+        <div class="hw-circle" id="hwCircle">
+          <span class="hw-circle-rupee">&#x20B9;</span><span class="hw-circle-num" id="hwCircleNum">7</span>
         </div>
-        <div class="roundup-calc">&#x20B9;15 &rarr; <strong>&#x20B9;20</strong></div>
-        <div class="roundup-label">SPARE CHANGE</div>
+        <div class="hw-calc" id="hwCalc">&#x20B9;73 &rarr; <strong>&#x20B9;80</strong></div>
+        <div class="hw-spare">SPARE CHANGE</div>
       </div>
 
-      <!-- Panel 3: Your Portfolio -->
-      <div class="how-panel">
-        <div class="panel-label" style="display:flex;justify-content:space-between;align-items:center">
-          YOUR PORTFOLIO
-          <span class="live-pill">LIVE</span>
+      <!-- Card 3: Portfolio -->
+      <div class="hw-card" id="hwPortfolio">
+        <div class="hw-eyebrow" style="display:flex;justify-content:space-between;align-items:center">
+          YOUR PORTFOLIO <span class="hw-live">LIVE</span>
         </div>
-        <div class="portfolio-value">&#x20B9;12,651</div>
-        <div class="portfolio-returns">Total returns <span class="lime">+8.4% &uarr;</span></div>
-        <div class="portfolio-goal">
+        <div class="hw-port-val" id="hwPortVal">&#x20B9;12,480</div>
+        <div class="hw-port-ret">Total returns <span class="lime">+8.4% &uarr;</span></div>
+        <div class="hw-goal">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-            <span class="goal-name">Europe Trip</span>
-            <span class="goal-pct">67%</span>
+            <span class="hw-goal-name">Europe Trip</span>
+            <span class="hw-goal-pct" id="hwGoalPct">62%</span>
           </div>
-          <div class="goal-bar"><div class="goal-bar-fill" style="width:67%"></div></div>
+          <div class="hw-goal-bar"><div class="hw-goal-fill" id="hwGoalFill" style="width:62%"></div></div>
         </div>
-        <div class="portfolio-invested">
-          <span class="invested-dot"></span>
-          +&#x20B9;5 invested just now
+        <div class="hw-toast" id="hwToast">
+          <span class="hw-toast-dot"></span>
+          <span id="hwToastText">+&#x20B9;7 invested just now</span>
         </div>
       </div>
     </div>
 
     <!-- Step indicators -->
-    <div class="how-steps reveal">
-      <div class="how-step-item">
-        <div class="step-circle">1</div>
-        <span>Transaction detected</span>
-      </div>
-      <div class="step-line"></div>
-      <div class="how-step-item">
-        <div class="step-circle">2</div>
-        <span>Round-up calculated</span>
-      </div>
-      <div class="step-line"></div>
-      <div class="how-step-item">
-        <div class="step-circle">3</div>
-        <span>Invested instantly</span>
-      </div>
-      <div class="step-line"></div>
-      <div class="how-step-item">
-        <div class="step-circle">4</div>
-        <span>Portfolio grows</span>
-      </div>
+    <div class="hw-steps reveal">
+      <div class="hw-step" id="hwStep1"><div class="hw-step-num">1</div><span>Transaction detected</span></div>
+      <div class="hw-step-line" id="hwLine1"></div>
+      <div class="hw-step" id="hwStep2"><div class="hw-step-num">2</div><span>Round-up calculated</span></div>
+      <div class="hw-step-line" id="hwLine2"></div>
+      <div class="hw-step" id="hwStep3"><div class="hw-step-num">3</div><span>Invested instantly</span></div>
+      <div class="hw-step-line" id="hwLine3"></div>
+      <div class="hw-step" id="hwStep4"><div class="hw-step-num">4</div><span>Portfolio grows</span></div>
     </div>
   </div>
 </section>
@@ -911,6 +963,148 @@ async function fetchCount() {
   } catch (e) {}
   updateAllCounts();
 }
+
+/* ══ ROUND-UP ANIMATION ══ */
+var TXN = [
+  { name:'Swiggy', cat:'Food delivery', amt:73, round:7, type:'upi', method:'UPI \u00b7 GPay', icon:'\ud83c\udf5b', iconBg:'rgba(235,93,42,0.12)' },
+  { name:'Ola', cat:'Ride sharing', amt:127, round:3, type:'upi', method:'UPI \u00b7 PhonePe', icon:'\ud83d\ude95', iconBg:'rgba(90,197,58,0.12)' },
+  { name:'BigBasket', cat:'Grocery delivery', amt:186, round:4, type:'upi', method:'UPI \u00b7 BHIM UPI', icon:'\ud83e\udd66', iconBg:'rgba(90,197,58,0.12)' },
+  { name:'Chaayos', cat:'Caf\u00e9', amt:54, round:6, type:'debit', method:'Debit \u00b7 HDFC', icon:'\u2615', iconBg:'rgba(96,165,250,0.12)' },
+  { name:'PharmEasy', cat:'Medicine delivery', amt:212, round:8, type:'upi', method:'UPI \u00b7 GPay', icon:'\ud83d\udc8a', iconBg:'rgba(90,197,58,0.12)' },
+  { name:'Indian Oil', cat:'Fuel station', amt:340, round:10, type:'debit', method:'Debit \u00b7 SBI', icon:'\u26fd', iconBg:'rgba(96,165,250,0.12)' },
+  { name:'Dabba lunch', cat:'Tiffin service', amt:80, round:10, type:'cash', method:'Voice logged via WhatsApp', icon:'\ud83c\udf71', iconBg:'rgba(235,93,42,0.12)' },
+  { name:'BookMyShow', cat:'Entertainment', amt:399, round:1, type:'upi', method:'UPI \u00b7 PhonePe', icon:'\ud83c\udfac', iconBg:'rgba(235,93,42,0.12)' },
+  { name:'Myntra', cat:'Fashion', amt:649, round:1, type:'debit', method:'Debit \u00b7 Kotak', icon:'\ud83d\udc5a', iconBg:'rgba(96,165,250,0.12)' },
+  { name:'Bus ticket', cat:'Transport', amt:15, round:5, type:'cash', method:'Voice logged via WhatsApp', icon:'\ud83d\ude8c', iconBg:'rgba(235,93,42,0.12)' },
+  { name:'Kirana shop', cat:'Groceries', amt:147, round:3, type:'cash', method:'Voice logged via WhatsApp', icon:'\ud83c\udfea', iconBg:'rgba(235,93,42,0.12)' }
+];
+
+var txnIdx = 0;
+var portTotal = 12480;
+var goalPct = 62;
+var animInterval = null;
+
+function setActiveStep(n) {
+  for (var i = 1; i <= 4; i++) {
+    var s = document.getElementById('hwStep' + i);
+    if (s) { if (i <= n) s.classList.add('active'); else s.classList.remove('active'); }
+  }
+  for (var j = 1; j <= 3; j++) {
+    var l = document.getElementById('hwLine' + j);
+    if (l) { if (j < n) l.classList.add('active'); else l.classList.remove('active'); }
+  }
+  var cards = ['hwSpend','hwRoundup','hwPortfolio'];
+  cards.forEach(function(id, idx) {
+    var el = document.getElementById(id);
+    if (el) { if (idx + 1 === n || (n === 3 && idx === 1)) el.classList.add('active'); else el.classList.remove('active'); }
+  });
+}
+
+function buildPaymentPill(t) {
+  if (t.type === 'upi') return '<div class="hw-pill hw-pill-upi">' + t.method + '</div>';
+  if (t.type === 'debit') return '<div class="hw-pill hw-pill-debit">' + t.method + '</div>';
+  return '<div class="hw-pill hw-pill-cash">\ud83c\udfa4 Voice logged \u00b7 \u20b9' + t.amt + ' spent</div>';
+}
+
+function spawnCoins(roundup) {
+  var container = document.getElementById('coinContainer');
+  var rect = container.getBoundingClientRect();
+  var circle = document.getElementById('hwCircle').getBoundingClientRect();
+  var port = document.getElementById('hwPortfolio').getBoundingClientRect();
+  var startX = circle.left + circle.width / 2 - rect.left;
+  var startY = circle.top + circle.height / 2 - rect.top;
+  var endX = port.left + 40 - rect.left;
+  var endY = port.top + 40 - rect.top;
+
+  for (var i = 0; i < 5; i++) {
+    (function(idx) {
+      setTimeout(function() {
+        var coin = document.createElement('div');
+        coin.className = 'coin';
+        coin.textContent = '\u20b9';
+        coin.style.left = startX + 'px';
+        coin.style.top = startY + 'px';
+        container.appendChild(coin);
+        var spread = (Math.random() - 0.5) * 30;
+        coin.animate([
+          { opacity: 1, transform: 'translate(0,0) scale(1)' },
+          { opacity: 0.8, transform: 'translate(' + ((endX - startX) * 0.5 + spread) + 'px,' + ((endY - startY) * 0.5 - 20 + spread) + 'px) scale(1.1)' },
+          { opacity: 0, transform: 'translate(' + (endX - startX + spread) + 'px,' + (endY - startY) + 'px) scale(0.6)' }
+        ], { duration: 600, easing: 'ease-in', fill: 'forwards' });
+        setTimeout(function() { coin.remove(); }, 700);
+      }, idx * 80);
+    })(i);
+  }
+}
+
+function runCycle() {
+  var t = TXN[txnIdx];
+  txnIdx = (txnIdx + 1) % TXN.length;
+  var rounded = t.amt + t.round;
+
+  // Reset
+  document.getElementById('hwTxnRows').classList.remove('show');
+  document.getElementById('hwToast').classList.remove('show');
+  document.getElementById('hwCircle').classList.remove('glow');
+  document.querySelectorAll('.connector-shimmer').forEach(function(s) { s.classList.remove('animate'); });
+
+  // Step 1: Transaction detected (0ms)
+  setActiveStep(1);
+  document.getElementById('hwMerchantIcon').style.background = t.iconBg;
+  document.getElementById('hwMerchantIcon').textContent = t.icon;
+  document.getElementById('hwMerchantName').textContent = t.name;
+  document.getElementById('hwMerchantCat').textContent = t.cat;
+  document.getElementById('hwAmount').innerHTML = '\u20b9' + t.amt.toLocaleString('en-IN');
+  document.getElementById('hwPayment').innerHTML = buildPaymentPill(t);
+  document.getElementById('hwTxnName').textContent = t.name;
+  document.getElementById('hwTxnMethod').textContent = t.method;
+  document.getElementById('hwTxnAmt').innerHTML = '\u20b9' + t.amt;
+  document.getElementById('hwRoundupAmt').innerHTML = '+\u20b9' + t.round;
+
+  setTimeout(function() {
+    document.getElementById('hwTxnRows').classList.add('show');
+  }, 300);
+
+  // Step 2: Round-up calculated (1200ms)
+  setTimeout(function() {
+    setActiveStep(2);
+    document.getElementById('hwCircleNum').textContent = t.round;
+    document.getElementById('hwCalc').innerHTML = '\u20b9' + t.amt + ' \u2192 <strong>\u20b9' + rounded + '</strong>';
+    document.getElementById('hwCircle').classList.add('glow');
+    document.querySelector('.connector-left .connector-shimmer').classList.add('animate');
+  }, 1200);
+
+  // Step 3: Coins fly (2400ms)
+  setTimeout(function() {
+    setActiveStep(3);
+    document.querySelector('.connector-right .connector-shimmer').classList.add('animate');
+    spawnCoins(t.round);
+  }, 2400);
+
+  // Step 4: Portfolio grows (3400ms)
+  setTimeout(function() {
+    setActiveStep(4);
+    portTotal += t.round;
+    document.getElementById('hwPortVal').innerHTML = '\u20b9' + portTotal.toLocaleString('en-IN');
+    goalPct = Math.min(99, goalPct + (t.round * 0.1));
+    document.getElementById('hwGoalPct').textContent = goalPct.toFixed(0) + '%';
+    document.getElementById('hwGoalFill').style.width = goalPct + '%';
+    document.getElementById('hwToastText').innerHTML = '+\u20b9' + t.round + ' invested just now';
+    document.getElementById('hwToast').classList.add('show');
+  }, 3400);
+}
+
+// Start animation when section is visible
+var howObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting && !animInterval) {
+      runCycle();
+      animInterval = setInterval(runCycle, 5000);
+    }
+  });
+}, { threshold: 0.2 });
+var howEl = document.getElementById('how');
+if (howEl) howObs.observe(howEl);
 
 /* ══ INIT ══ */
 fetchCount();
