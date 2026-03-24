@@ -391,6 +391,36 @@ select.form-input option { background: var(--black2); color: var(--white); }
 .hw-toast-text { font-family: var(--font-body); font-size: 11px; font-weight: 500; color: #9ca3af; }
 .hw-toast-text span { color: #d5fd51; }
 
+/* Portfolio tabs */
+.hw-port-tabs {
+  display: flex; gap: 2px; margin-bottom: 16px;
+  background: #111315; border-radius: 8px; padding: 2px;
+}
+.hw-port-tab {
+  flex: 1; padding: 6px 8px; border: none; border-radius: 6px;
+  background: transparent; cursor: pointer;
+  font-family: var(--font-body); font-size: 10px; font-weight: 600;
+  color: #4b5563; letter-spacing: 0.3px; transition: all 0.25s ease;
+}
+.hw-port-tab.active { background: #1a1d1f; color: #f5f5f0; }
+.hw-port-tab[data-tab="gold"].active { color: #f6c86a; }
+
+/* Gold panel */
+.hw-gold-grams {
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
+  color: #9ca3af; margin-bottom: 14px;
+}
+.hw-gold-grams span { color: #f6c86a; font-weight: 600; }
+.hw-gold-partner {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-body); font-size: 10px; font-weight: 600;
+  color: rgba(246,200,106,0.6); letter-spacing: 0.5px;
+}
+.hw-gold-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #f6c86a; animation: pulse 2s ease infinite;
+}
+
 /* Connectors */
 .hw-conn { width: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
 .hw-conn-line { width: 100%; height: 1.5px; background: rgba(255,255,255,0.05); position: relative; overflow: hidden; }
@@ -724,18 +754,32 @@ footer {
         <span class="hw-card-eyebrow" style="margin-bottom:0">Your portfolio</span>
         <div class="hw-port-badge">Live</div>
       </div>
-      <div class="hw-port-amount">&#x20B9;<span id="port-val">12,480</span></div>
-      <div class="hw-port-return">Total returns <span>+8.4%</span> &uarr;</div>
-      <div>
-        <div class="hw-goal-header">
-          <div class="hw-goal-name">Europe Trip</div>
-          <div class="hw-goal-pct" id="goal-pct">62%</div>
+      <div class="hw-port-tabs">
+        <button class="hw-port-tab active" id="tab-mf" data-tab="mf">Mutual Funds</button>
+        <button class="hw-port-tab" id="tab-gold" data-tab="gold">Digital Gold &#x1FA99;</button>
+      </div>
+      <div class="hw-port-panel" id="panel-mf">
+        <div class="hw-port-amount">&#x20B9;<span id="port-val">12,480</span></div>
+        <div class="hw-port-return">Total returns <span>+8.4%</span> &uarr;</div>
+        <div>
+          <div class="hw-goal-header">
+            <div class="hw-goal-name">Europe Trip</div>
+            <div class="hw-goal-pct" id="goal-pct">62%</div>
+          </div>
+          <div class="hw-goal-bar"><div class="hw-goal-fill" id="goal-fill" style="width:62%"></div></div>
         </div>
-        <div class="hw-goal-bar"><div class="hw-goal-fill" id="goal-fill" style="width:62%"></div></div>
+      </div>
+      <div class="hw-port-panel" id="panel-gold" style="display:none">
+        <div class="hw-port-amount" style="color:#f6c86a">&#x20B9;<span id="gold-val">1,240</span></div>
+        <div class="hw-gold-grams"><span id="gold-grams">0.182</span>g &middot; 24K Gold</div>
+        <div class="hw-gold-partner">
+          <div class="hw-gold-dot"></div>
+          Powered by Augmont
+        </div>
       </div>
       <div class="hw-invest-toast" id="toast">
         <div class="hw-toast-dot"></div>
-        <div class="hw-toast-text">+<span id="toast-amt">&#x20B9;7</span> invested just now</div>
+        <div class="hw-toast-text"><span id="toast-text">+&#x20B9;7 invested just now</span></div>
       </div>
     </div>
 
@@ -988,12 +1032,15 @@ var TXN = [
   { name:'BookMyShow', cat:'Entertainment', amt:399, round:1, type:'upi', method:'UPI \u00b7 PhonePe', icon:'\ud83c\udfac', iconBg:'rgba(235,93,42,0.12)', dotColor:'#5ac53a' },
   { name:'Myntra', cat:'Fashion', amt:649, round:1, type:'debit', method:'Debit \u00b7 Kotak', icon:'\ud83d\udc5a', iconBg:'rgba(96,165,250,0.12)', dotColor:'#60a5fa' },
   { name:'Bus ticket', cat:'Transport', amt:15, round:5, type:'cash', method:'Voice logged via WhatsApp', icon:'\ud83d\ude8c', iconBg:'rgba(235,93,42,0.12)', dotColor:'#eb5d2a' },
-  { name:'Kirana shop', cat:'Groceries', amt:147, round:3, type:'cash', method:'Voice logged via WhatsApp', icon:'\ud83c\udfea', iconBg:'rgba(235,93,42,0.12)', dotColor:'#eb5d2a' }
+  { name:'Kirana shop', cat:'Groceries', amt:147, round:3, type:'cash', method:'Voice logged via WhatsApp', icon:'\ud83c\udfea', iconBg:'rgba(235,93,42,0.12)', dotColor:'#eb5d2a' },
+  { name:'Vegetable vendor', cat:'Local market', amt:43, round:7, type:'cash', method:'Voice logged via WhatsApp', icon:'\ud83e\udd55', iconBg:'rgba(90,197,58,0.12)', dotColor:'#eb5d2a', gold:true, goldGrams:0.002 }
 ];
 
 var txnIdx = 0;
 var portTotal = 12480;
 var goalPct = 62;
+var goldTotal = 1240;
+var goldGrams = 0.182;
 var animRunning = false;
 
 function wait(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
@@ -1091,7 +1138,13 @@ async function runCycle() {
   document.getElementById('txna-title').textContent = t.name + ' order';
   document.getElementById('txna-sub').textContent = t.cat + ' \u00b7 ' + (t.type === 'cash' ? 'Voice' : t.type.toUpperCase());
   document.getElementById('txna-amt').innerHTML = '\u20b9' + t.amt;
-  document.getElementById('txnb-amt').innerHTML = '+\u20b9' + t.round;
+  if (t.gold) {
+    document.getElementById('txnb-amt').innerHTML = '+\u20b9' + t.round;
+    document.getElementById('txnb-amt').style.color = '#f6c86a';
+  } else {
+    document.getElementById('txnb-amt').innerHTML = '+\u20b9' + t.round;
+    document.getElementById('txnb-amt').style.color = '#d5fd51';
+  }
 
   await wait(350);
   document.getElementById('txn-a').classList.add('show');
@@ -1103,7 +1156,9 @@ async function runCycle() {
 
   var rbAmt = document.getElementById('rb-amt');
   rbAmt.textContent = t.round;
-  flashEl(rbAmt, '#d5fd51');
+  var rbColor = t.gold ? '#f6c86a' : '#d5fd51';
+  flashEl(rbAmt, rbColor);
+  document.getElementById('rb').style.borderColor = t.gold ? 'rgba(246,200,106,0.3)' : 'rgba(213,253,81,0.2)';
 
   document.getElementById('mid-from').innerHTML = '\u20b9' + t.amt;
   document.getElementById('mid-to').innerHTML = '\u20b9' + rounded;
@@ -1114,16 +1169,37 @@ async function runCycle() {
 
   await wait(800);
   setStep(4);
-  portTotal += t.round;
-  var portVal = document.getElementById('port-val');
-  portVal.textContent = portTotal.toLocaleString('en-IN');
-  flashEl(portVal, '#d5fd51');
 
-  goalPct = Math.min(99, goalPct + (t.round * 0.1));
-  document.getElementById('goal-pct').textContent = goalPct.toFixed(0) + '%';
-  document.getElementById('goal-fill').style.width = goalPct + '%';
+  var isGold = t.gold === true;
+  var tabMf = document.getElementById('tab-mf');
+  var tabGold = document.getElementById('tab-gold');
+  var panelMf = document.getElementById('panel-mf');
+  var panelGold = document.getElementById('panel-gold');
 
-  document.getElementById('toast-amt').innerHTML = '\u20b9' + t.round;
+  if (isGold) {
+    tabMf.classList.remove('active'); tabGold.classList.add('active');
+    panelMf.style.display = 'none'; panelGold.style.display = '';
+    goldTotal += t.round;
+    goldGrams += t.goldGrams;
+    var gv = document.getElementById('gold-val');
+    gv.textContent = goldTotal.toLocaleString('en-IN');
+    flashEl(gv, '#f6c86a');
+    document.getElementById('gold-grams').textContent = goldGrams.toFixed(3);
+    document.getElementById('toast-text').innerHTML = '+\u20b9' + t.round + ' \u00b7 ' + t.goldGrams + 'g gold added';
+    document.querySelector('.hw-toast-dot').style.background = '#f6c86a';
+  } else {
+    tabGold.classList.remove('active'); tabMf.classList.add('active');
+    panelGold.style.display = 'none'; panelMf.style.display = '';
+    portTotal += t.round;
+    var portVal = document.getElementById('port-val');
+    portVal.textContent = portTotal.toLocaleString('en-IN');
+    flashEl(portVal, '#d5fd51');
+    goalPct = Math.min(99, goalPct + (t.round * 0.1));
+    document.getElementById('goal-pct').textContent = goalPct.toFixed(0) + '%';
+    document.getElementById('goal-fill').style.width = goalPct + '%';
+    document.getElementById('toast-text').innerHTML = '+\u20b9' + t.round + ' invested just now';
+    document.querySelector('.hw-toast-dot').style.background = '#d5fd51';
+  }
   document.getElementById('toast').classList.add('show');
 
   await wait(2200);
