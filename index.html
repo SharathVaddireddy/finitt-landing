@@ -602,7 +602,7 @@ footer {
   <div class="nav-right">
     <div class="nav-count">
       <div class="pulse-dot"></div>
-      <strong id="nav-count-num">0</strong>
+      <strong id="nav-count-num">22</strong>
       <span>on waitlist</span>
     </div>
   </div>
@@ -628,7 +628,7 @@ footer {
     <div class="waitlist-box">
       <div class="waitlist-count-display">
         <div>
-          <div class="waitlist-num" id="hero-count">0</div>
+          <div class="waitlist-num" id="hero-count">22</div>
           <div class="waitlist-label">people on waitlist</div>
         </div>
       </div>
@@ -893,7 +893,7 @@ footer {
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLpEn5r_yFjjOGTOP8QQXT_t8muhwuoPTSYa9Cgf_FQ5AttCyxL7RFJrv_8ZiajZ8/exec';
 
 /* ══ STATE ══ */
-let waitlistCount = 0;
+let waitlistCount = 22; /* floor — update on each deploy */
 
 /* ══ COUNT DISPLAY ══ */
 function animateCount(el, target) {
@@ -1010,15 +1010,19 @@ var obs = new IntersectionObserver(function (entries) {
 }, { threshold: 0.1 });
 reveals.forEach(function (el) { obs.observe(el); });
 
-/* ══ FETCH COUNT ON LOAD ══ */
-async function fetchCount() {
+/* ══ POLL COUNT — every 15s ══ */
+async function pollCount() {
   try {
     var res = await fetch(APPS_SCRIPT_URL);
     var json = await res.json();
-    if (json.count !== undefined) waitlistCount = json.count;
+    if (json.count !== undefined && json.count > waitlistCount) {
+      waitlistCount = json.count;
+      updateAllCounts();
+    }
   } catch (e) {}
-  updateAllCounts();
 }
+pollCount();
+setInterval(pollCount, 15000);
 
 /* ══ ROUND-UP ANIMATION ══ */
 var TXN = [
@@ -1224,7 +1228,6 @@ if (howEl) howObs.observe(howEl);
 
 
 /* ══ INIT ══ */
-fetchCount();
 </script>
 </body>
 </html>
